@@ -1,4 +1,7 @@
 import { inboxHandler } from "./server/inbox-handler";
+import { inboxStreamHandler } from "./server/inbox-stream-handler";
+import { ticketHandler } from "./server/ticket-handler";
+import { takeawayStreamHandler } from "./server/takeaway-stream-handler";
 import vike, { toFetchHandler } from "@vikejs/express";
 import express from "express";
 import type { Server } from "vike/types";
@@ -8,7 +11,7 @@ const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 function getHandler() {
   const app = express();
 
-  vike(app, [inboxHandler]);
+  vike(app, [inboxHandler, inboxStreamHandler, ticketHandler, takeawayStreamHandler]);
 
   return toFetchHandler(app);
 }

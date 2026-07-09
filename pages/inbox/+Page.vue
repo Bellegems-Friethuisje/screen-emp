@@ -2,14 +2,14 @@
   <div>
     <h1>Inbox</h1>
     <p>
-      POST JSON to <code>/api/inbox</code> and it will show up below (polls every 2s).
+      POST JSON to <code>/api/inbox</code> and it will show up below instantly (pushed live via
+      Server-Sent Events, no polling).
     </p>
     <pre class="example">curl -X POST {{ origin }}/api/inbox \
   -H "Content-Type: application/json" \
   -d '{"hello": "world"}'</pre>
 
     <div class="toolbar">
-      <button @click="refresh">Refresh now</button>
       <button @click="clearAll">Clear</button>
     </div>
 
@@ -34,26 +34,23 @@ type InboxEntry = {
 
 const entries = ref<InboxEntry[]>([]);
 const origin = typeof window !== "undefined" ? window.location.origin : "";
-let pollHandle: ReturnType<typeof setInterval> | undefined;
-
-async function refresh() {
-  const response = await fetch("/api/inbox");
-  const data = (await response.json()) as { entries: InboxEntry[] };
-  entries.value = data.entries;
-}
+let eventSource: EventSource | undefined;
 
 async function clearAll() {
   await fetch("/api/inbox", { method: "DELETE" });
-  await refresh();
+  entries.value = [];
 }
 
 onMounted(() => {
-  refresh();
-  pollHandle = setInterval(refresh, 2000);
+  eventSource = new EventSource("/api/inbox/stream");
+  eventSource.onmessage = (event) => {
+    const entry = JSON.parse(event.data) as InboxEntry;
+    entries.value = [entry, ...entries.value];
+  };
 });
 
 onUnmounted(() => {
-  if (pollHandle) clearInterval(pollHandle);
+  eventSource?.close();
 });
 </script>
 

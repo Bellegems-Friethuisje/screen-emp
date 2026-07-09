@@ -6,6 +6,7 @@
       <Logo />
       <NavLink href="/"> Welcome </NavLink>
       <NavLink href="/inbox"> Inbox </NavLink>
+      <NavLink href="/takeaway"> Takeaway </NavLink>
     </Sidebar>
     <Content><slot /></Content>
   </div>

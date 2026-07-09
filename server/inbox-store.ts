@@ -5,10 +5,13 @@ export type InboxEntry = {
 
 const entries: InboxEntry[] = [];
 const MAX_ENTRIES = 100;
+const subscribers = new Set<(entry: InboxEntry) => void>();
 
 export function addEntry(body: unknown) {
-  entries.unshift({ receivedAt: new Date().toISOString(), body });
+  const entry = { receivedAt: new Date().toISOString(), body };
+  entries.unshift(entry);
   entries.length = Math.min(entries.length, MAX_ENTRIES);
+  for (const subscriber of subscribers) subscriber(entry);
 }
 
 export function getEntries(): InboxEntry[] {
@@ -17,4 +20,9 @@ export function getEntries(): InboxEntry[] {
 
 export function clearEntries() {
   entries.length = 0;
+}
+
+export function subscribe(callback: (entry: InboxEntry) => void) {
+  subscribers.add(callback);
+  return () => subscribers.delete(callback);
 }
