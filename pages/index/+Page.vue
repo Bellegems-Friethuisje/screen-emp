@@ -100,6 +100,13 @@ onUnmounted(() => {
   letter-spacing: 0.03em;
   margin: 0 0 40px;
   color: #fff;
+  /* Reserve two lines of space so the numbers below never shift when a
+     translated title wraps to a second line. */
+  line-height: 1.2;
+  min-height: 2.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .numbers {
   display: flex;
