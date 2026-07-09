@@ -2,7 +2,7 @@
   <div class="board">
     <div class="columns">
       <section class="column">
-        <h2>We zijn ermee bezig</h2>
+        <h2>{{ isFrench ? "En cours de préparation" : "We zijn ermee bezig" }}</h2>
         <div class="numbers">
           <button
             v-for="entry in inProgress"
@@ -16,7 +16,7 @@
       </section>
 
       <section class="column">
-        <h2>Klaar om af te halen</h2>
+        <h2>{{ isFrench ? "Prêt à récupérer" : "Klaar om af te halen" }}</h2>
         <div class="numbers">
           <div v-for="entry in ready" :key="entry.number" class="number ready">
             {{ entry.number }}
@@ -38,7 +38,9 @@ type TakeawayEntry = {
 };
 
 const entries = ref<TakeawayEntry[]>([]);
+const isFrench = ref(false);
 let eventSource: EventSource | undefined;
+let languageInterval: ReturnType<typeof setInterval> | undefined;
 
 const inProgress = computed(() => entries.value.filter((entry) => entry.status === "in_progress"));
 const ready = computed(() => entries.value.filter((entry) => entry.status === "ready"));
@@ -57,10 +59,15 @@ onMounted(() => {
     const data = JSON.parse(event.data) as { entries: TakeawayEntry[] };
     entries.value = data.entries;
   };
+
+  languageInterval = setInterval(() => {
+    isFrench.value = !isFrench.value;
+  }, 8000);
 });
 
 onUnmounted(() => {
   eventSource?.close();
+  if (languageInterval) clearInterval(languageInterval);
 });
 </script>
 
