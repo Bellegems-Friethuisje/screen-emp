@@ -1,55 +1,20 @@
 <!-- https://vike.dev/Layout -->
 
 <template>
-  <div class="layout">
-    <Sidebar>
-      <Logo />
-      <NavLink href="/"> Welcome </NavLink>
-      <NavLink href="/inbox"> Inbox </NavLink>
-      <NavLink href="/takeaway"> Takeaway </NavLink>
-    </Sidebar>
-    <Content><slot /></Content>
-  </div>
+  <Content><slot /></Content>
 </template>
 
 <script lang="ts" setup>
 import Content from "../components/Content.vue";
-import Logo from "../components/Logo.vue";
-import NavLink from "../components/NavLink.vue";
-import Sidebar from "../components/Sidebar.vue";
 </script>
 
 <style>
 body {
   margin: 0;
   font-family: sans-serif;
+  background: #000;
 }
 * {
   box-sizing: border-box;
-}
-a {
-  text-decoration: none;
-}
-</style>
-
-<style scoped>
-.layout {
-  display: flex;
-  max-width: 900px;
-  margin: auto;
-}
-.content {
-  padding: 20px;
-  padding-bottom: 50px;
-  min-height: 100vh;
-  flex-grow: 1;
-}
-/* Page Transition Animation */
-#page-content {
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
-body.page-transition #page-content {
-  opacity: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 import { enhance, type UniversalHandler } from "@universal-middleware/core";
-import { addNumber, clearNumbers } from "./takeaway-store";
+import { addEntry, clearEntries } from "./takeaway-store";
 
 type TicketWebhook = {
   event_data?: {
@@ -13,11 +13,11 @@ type TicketWebhook = {
 
 // POST /api/tickets — receives CREATE_TICKET webhooks. Takeaway tickets
 // (consumption_type === 2) are turned into a pickup number (prefix +
-// last 2 digits of the ticket number) and pushed to the takeaway board.
+// last 2 digits of the ticket number) and added to the board as "in progress".
 export const ticketHandler: UniversalHandler<Universal.Context & object> = enhance(
   async (request, _context, _runtime) => {
     if (request.method === "DELETE") {
-      clearNumbers();
+      clearEntries();
       return new Response(JSON.stringify({ status: "OK" }), {
         status: 200,
         headers: { "content-type": "application/json" },
@@ -38,7 +38,7 @@ export const ticketHandler: UniversalHandler<Universal.Context & object> = enhan
     if (header?.consumption_type === 2 && header.number != null) {
       const prefix = header.prefix_number != null ? String(header.prefix_number) : "";
       const lastTwoDigits = String(header.number).slice(-2);
-      addNumber(`${prefix}${lastTwoDigits}`);
+      addEntry(`${prefix}${lastTwoDigits}`);
     }
 
     return new Response(JSON.stringify({ status: "OK" }), {

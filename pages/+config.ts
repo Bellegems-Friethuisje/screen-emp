@@ -6,8 +6,8 @@ import vikeVue from "vike-vue/config";
 
 const config: Config = {
   // https://vike.dev/head-tags
-  title: "My Vike App",
-  description: "Demo showcasing Vike",
+  title: "Takeaway Status",
+  description: "Live status board for takeaway orders",
 
   extends: [vikeVue],
 

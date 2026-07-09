@@ -26,7 +26,6 @@ This app is ready to start. It's powered by [Vike](https://vike.dev) and [Vue](h
 - [`+Layout.vue`](https://vike.dev/Layout) — The `<Layout>` component (wraps your `<Page>` components)
 - [`+Head.vue`](https://vike.dev/Head) - Sets `<head>` tags
 - [`/pages/_error/+Page.vue`](https://vike.dev/error-page) — The error page (rendered when an error occurs)
-- [`+onPageTransitionStart.ts`](https://vike.dev/onPageTransitionStart) and `+onPageTransitionEnd.ts` — For page transition animations
 
 ### Routing
 

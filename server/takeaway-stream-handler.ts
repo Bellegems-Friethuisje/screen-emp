@@ -1,12 +1,12 @@
 import { enhance, type UniversalHandler } from "@universal-middleware/core";
-import { getNumbers, subscribe, type TakeawayNumber } from "./takeaway-store";
+import { getEntries, subscribe, type TakeawayEntry } from "./takeaway-store";
 
-function toSseMessage(entry: TakeawayNumber) {
-  return `data: ${JSON.stringify(entry)}\n\n`;
+function toSseMessage(entries: TakeawayEntry[]) {
+  return `data: ${JSON.stringify({ entries })}\n\n`;
 }
 
 // GET /api/tickets/stream — Server-Sent Events for the takeaway board.
-// Pushes existing numbers on connect, then each new one live as it arrives.
+// Sends the full entries snapshot on connect and again on every change.
 export const takeawayStreamHandler: UniversalHandler<Universal.Context & object> = enhance(
   async (_request, _context, _runtime) => {
     let unsubscribe: (() => void) | undefined;
@@ -15,12 +15,10 @@ export const takeawayStreamHandler: UniversalHandler<Universal.Context & object>
       start(controller) {
         const encoder = new TextEncoder();
 
-        for (const entry of [...getNumbers()].reverse()) {
-          controller.enqueue(encoder.encode(toSseMessage(entry)));
-        }
+        controller.enqueue(encoder.encode(toSseMessage(getEntries())));
 
-        unsubscribe = subscribe((entry) => {
-          controller.enqueue(encoder.encode(toSseMessage(entry)));
+        unsubscribe = subscribe((entries) => {
+          controller.enqueue(encoder.encode(toSseMessage(entries)));
         });
       },
       cancel() {
