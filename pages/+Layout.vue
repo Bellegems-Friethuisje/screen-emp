@@ -5,8 +5,7 @@
     <Sidebar>
       <Logo />
       <NavLink href="/"> Welcome </NavLink>
-      <NavLink href="/todo"> Todo </NavLink>
-      <NavLink href="/star-wars"> Data Fetching </NavLink>
+      <NavLink href="/inbox"> Inbox </NavLink>
     </Sidebar>
     <Content><slot /></Content>
   </div>

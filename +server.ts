@@ -1,4 +1,4 @@
-import { createTodoHandler } from "./server/create-todo-handler";
+import { inboxHandler } from "./server/inbox-handler";
 import vike, { toFetchHandler } from "@vikejs/express";
 import express from "express";
 import type { Server } from "vike/types";
@@ -8,7 +8,7 @@ const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 function getHandler() {
   const app = express();
 
-  vike(app, [createTodoHandler]);
+  vike(app, [inboxHandler]);
 
   return toFetchHandler(app);
 }
